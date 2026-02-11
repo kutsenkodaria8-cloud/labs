@@ -6,6 +6,55 @@ __pycache__/
 # C extensions
 *.so
 
+# Системні файли
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.env
+venv/
+.venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+pythonenv*
+
+# Збірка
+dist/
+build/
+*.egg-info/
+*.egg
+
+# Jupyter
+.ipynb_checkpoints
+*.ipynb
+
+# Логи
+*.log
+*.tmp
+*.temp
+
+# Тестові дані (якщо не хочеш пушити великі файли)
+*.csv
+*.json
+*.xlsx
+!example.csv
+
+
 # Distribution / packaging
 .Python
 build/
