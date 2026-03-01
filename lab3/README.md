@@ -18,9 +18,11 @@
 Python 3.10+ Jupyter Notebook 
 
 ## Встановлення залежностей
-
+```
 pip install -r requirements.txt
+```
 
 ## Запуск
-
+```
 jupyter notebook lab3.ipynb
+```
