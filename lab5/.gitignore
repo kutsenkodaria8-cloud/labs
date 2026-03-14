@@ -1,0 +1,11 @@
+.DS_Store
+.idea/
+.vscode/
+*.swp
+bin/
+build/
+__pycache__/
+venv/
+vhi_data.csv
+*.log
+*.json
