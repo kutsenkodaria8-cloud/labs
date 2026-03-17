@@ -1,6 +1,7 @@
 import pandas as pd
 import streamlit as st
 import plotly.express as px
+import plotly.graph_objects as go
 
 df = pd.read_csv("vhi_data.csv")
 region_names = {
@@ -45,9 +46,9 @@ with (col1):
 
 if sort_a and sort_b:
     st.warning("Помилка, оберіть одне сортування")
-if sort_a:
+elif sort_a:
     filtered_df = filtered_df.sort_values(by=index_type, ascending=True)
-if sort_b:
+elif sort_b:
     filtered_df = filtered_df.sort_values(by=index_type, ascending=False)
 
 with (col2):
@@ -55,15 +56,50 @@ with (col2):
     with tab1:
         st.dataframe(filtered_df)
     with tab2:
-        st.line_chart(filtered_df[["Week", index_type]].set_index("Week"))
+        years = sorted(filtered_df['Year'].unique())
+        st.write("Оберіть роки для відображення:")
+        cols = st.columns(5)
+        selected_years = []
+        for i, year_val in enumerate(years):
+            with cols[i % 5]:
+                if st.checkbox(str(year_val), value=True, key=f"year_{year_val}"):
+                    selected_years.append(year_val)
+        if selected_years:
+            fig2 = go.Figure()
+            line_styles = ['solid', 'dot', 'dash', 'longdash', 'dashdot', 'longdashdot']
+            for idx, year_val in enumerate(selected_years):
+                year_data = filtered_df[filtered_df['Year'] == year_val]
+                fig2.add_trace(go.Scatter(
+                    x=year_data['Week'],
+                    y=year_data[index_type],
+                    mode='lines+markers',
+                    name=str(year_val),
+                    line=dict(
+                        color='purple',
+                        width=2,
+                        dash=line_styles[idx % len(line_styles)]),
+                    marker=dict(
+                        symbol=['circle', 'square', 'diamond', 'cross', 'x'][idx % 5],
+                        size=6,
+                        color='purple')))
+            fig2.update_layout(
+                title=f"{index_type} по тижнях",
+                xaxis_title="Тиждень",
+                yaxis_title=index_type,
+                legend_title="Роки")
+            st.plotly_chart(fig2)
+        else:
+            st.warning("Оберіть хоча б один рік")
     with tab3:
         summary_df = df[
             (df["Year"] >= year[0]) & (df["Year"] <= year[1]) & (df["Week"] >= week[0]) & (df["Week"] <= week[1])]
-        summary_df=summary_df.groupby("ID")[index_type].mean().reset_index()
-        summary_df["Region"]=summary_df["ID"].map(region_names)
+        summary_df = summary_df.groupby("ID")[index_type].mean().reset_index()
+        summary_df["Region"] = summary_df["ID"].map(region_names)
         summary_df["Color"] = summary_df["Region"].apply(lambda x: "Обрана" if x == region else "Інші")
         fig = px.bar(summary_df, x="Region", y=index_type, color="Color", color_discrete_map={"Обрана": "red", "Інші": "steelblue"})
         st.plotly_chart(fig)
+
+
 
 
 
