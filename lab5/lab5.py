@@ -56,32 +56,16 @@ with (col2):
     with tab1:
         st.dataframe(filtered_df)
     with tab2:
-        years = sorted(filtered_df['Year'].unique())
-        st.write("Оберіть роки для відображення:")
-        cols = st.columns(5)
-        selected_years = []
-        for i, year_val in enumerate(years):
-            with cols[i % 5]:
-                if st.checkbox(str(year_val), value=True, key=f"year_{year_val}"):
-                    selected_years.append(year_val)
-        if selected_years:
+        if not filtered_df.empty:
             fig2 = go.Figure()
-            line_styles = ['solid', 'dot', 'dash', 'longdash', 'dashdot', 'longdashdot']
-            for idx, year_val in enumerate(selected_years):
+            for year_val in sorted(filtered_df['Year'].unique()):
                 year_data = filtered_df[filtered_df['Year'] == year_val]
                 fig2.add_trace(go.Scatter(
                     x=year_data['Week'],
                     y=year_data[index_type],
-                    mode='lines+markers',
+                    mode='lines',
                     name=str(year_val),
-                    line=dict(
-                        color='purple',
-                        width=2,
-                        dash=line_styles[idx % len(line_styles)]),
-                    marker=dict(
-                        symbol=['circle', 'square', 'diamond', 'cross', 'x'][idx % 5],
-                        size=6,
-                        color='purple')))
+                    line=dict(width=2)))
             fig2.update_layout(
                 title=f"{index_type} по тижнях",
                 xaxis_title="Тиждень",
@@ -89,7 +73,7 @@ with (col2):
                 legend_title="Роки")
             st.plotly_chart(fig2)
         else:
-            st.warning("Оберіть хоча б один рік")
+            st.warning("Немає даних для відображення")
     with tab3:
         summary_df = df[
             (df["Year"] >= year[0]) & (df["Year"] <= year[1]) & (df["Week"] >= week[0]) & (df["Week"] <= week[1])]
