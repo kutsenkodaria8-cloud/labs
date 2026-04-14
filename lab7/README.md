@@ -1,4 +1,4 @@
-# Lab6: C++ OpenCV
+# Lab7: C++ Computer Vision
 
 ## Вимоги
 - Linux (Ubuntu 20.04+) або Windows з MinGW
