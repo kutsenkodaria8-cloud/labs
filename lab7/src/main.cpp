@@ -46,7 +46,6 @@ void onMouse(int event, int x, int y, int flags, void*) {
 }
 
 int main(int argc, char* argv[]) {
-    // Find assets/: check current working dir first, then relative to exe
     std::string assetsDir = "./assets";
     if (!std::filesystem::exists(assetsDir)) {
         std::string exeDir = std::filesystem::path(argv[0]).parent_path().string();
